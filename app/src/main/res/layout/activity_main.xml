@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewmodel"
+            type="de.xxlstrandkorbverleih.markerdatabindingtest.ViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--
+map:mapType="0" Specifies a change to the initial map type
+map:zOrderOnTop="true"  Control whether the map view's surface is placed on top of its window
+map:useVieLifecycle="true" When using a MapFragment, this flag specifies whether the lifecycle of the map should be tied to the fragment's view or the fragment itself
+map:uiCompass="true" Enables or disables the compass
+map:uiRotateGestures="true" Sets the preference for whether rotate gestures should be enabled or disabled
+map:uiScrollGestures="true" Sets the preference for whether scroll gestures should be enabled or disabled
+map:uiTiltGestures="true" Sets the preference for whether tilt gestures should be enabled or disabled
+map:uiZoomGestures="true" Sets the preference for whether zoom gestures should be enabled or disabled
+map:uiZoomControls="true" Enables or disables the zoom controls
+map:liteMode="true" Specifies whether the map should be created in lite mode
+map:uiMapToolbar="true" Specifies whether the mapToolbar should be enabled
+map:ambientEnabled="true" Specifies whether ambient-mode styling should be enabled
+map:cameraMinZoomPreference="0.0" Specifies a preferred lower bound for camera zoom
+map:cameraMaxZoomPreference="1.0" Specifies a preferred upper bound for camera zoom -->
+
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/beach_map"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            app:layout_constraintHeight_default="percent"
+            app:layout_constraintHeight_percent="0.90"
+
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="1" />
+
+        <TextView
+            android:id="@+id/selected_beachchair_text"
+            android:text="Markierter Korb"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/beach_map"
+
+            app:layout_constraintHeight_default="percent"
+            app:layout_constraintHeight_percent="0.1"
+
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.5" />
+
+        <TextView
+            android:id="@+id/selected_beachchair_number"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/beach_map"
+
+            app:layout_constraintHeight_default="percent"
+            app:layout_constraintHeight_percent="0.1"
+
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.5" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
