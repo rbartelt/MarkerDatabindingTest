@@ -1,117 +1,67 @@
 package de.xxlstrandkorbverleih.markerdatabindingtest;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.databinding.DataBindingUtil;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.material.navigation.NavigationView;
 
-import de.xxlstrandkorbverleih.markerdatabindingtest.databinding.ActivityMainBinding;
+import java.util.HashSet;
+import java.util.Set;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private MapView map;
-    private GoogleMap googleMap;
-    public static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
+public class MainActivity extends AppCompatActivity {
+    private NavController navController;
+    private AppBarConfiguration appBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        ViewModel viewModel = new ViewModel();
-        binding.setViewmodel(viewModel);
-        initGoogleMap(savedInstanceState);
-        map = binding.beachMap;
+        setContentView(R.layout.activity_main);
+
+        //get NavHostFragment
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        navController = navHostFragment.getNavController();                         //get NavController
+
+        //set TopLevelDestinations (wich dont show the Backbutton in Actionbar)
+        Set<Integer> topLevelDestinations = new HashSet<>();
+        topLevelDestinations.add(R.id.mapFragment);
+        //find DrawerLayout
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        //setup AppBarConfiguration
+        appBarConfiguration = new AppBarConfiguration.Builder(topLevelDestinations).setOpenableLayout(drawerLayout).build();
+
+        Toolbar toolbar = findViewById(R.id.toolbar);                               //find Toolbar
+        setSupportActionBar(toolbar);                                               //set Toolbar as Actionbar in Mainactivity
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);   //connects the Toolbar with Navgraph
+
+        //Connect Drawer with Navgraph
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        NavigationUI.setupWithNavController(navigationView, navController);
+
+        //Ask for Permissions
+        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+
+
+        //Request GPS Permission
+        ActivityCompat.requestPermissions(
+                this,
+                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 0
+        );
+
+
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        map.onStart();
+    public boolean onSupportNavigateUp() {
+        return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        map.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        map.onDestroy();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        map.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        map.onResume();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        Bundle mapViewBundle = outState.getBundle(MAPVIEW_BUNDLE_KEY);
-        if (mapViewBundle == null) {
-            mapViewBundle = new Bundle();
-            outState.putBundle(MAPVIEW_BUNDLE_KEY, mapViewBundle);
-        }
-
-        map.onSaveInstanceState(mapViewBundle);
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        map.onLowMemory();
-    }
-    private void initGoogleMap(Bundle savedInstanceState) {
-        // *** IMPORTANT ***
-        // MapView requires that the Bundle you pass contain _ONLY_ MapView SDK
-        // objects or sub-Bundles.
-        Bundle mapViewBundle = null;
-        if (savedInstanceState != null) {
-            mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
-        }
-
-        map.onCreate(mapViewBundle);
-        map.getMapAsync(this);
-    }
-
-    @SuppressLint("MissingPermission")
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        this.googleMap = googleMap;
-        this.googleMap.setMyLocationEnabled(true);
-        //viewModel.getAllBeachchairs().observe(getViewLifecycleOwner(), this::onChanged);
-
-    }
 }
