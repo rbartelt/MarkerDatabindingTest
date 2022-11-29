@@ -19,6 +19,7 @@
             android:layout_height="0dp"
 
             app:initMap="@{viewmodel.beachchairs}"
+            app:markerevent="@{viewmodel}"
 
             app:layout_constraintHeight_default="percent"
             app:layout_constraintHeight_percent="0.9"
