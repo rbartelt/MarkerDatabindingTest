@@ -7,11 +7,13 @@ public class Beachchair {
     private int number;
     private String type;
     private LatLng location;
+    private boolean free;
 
-    public Beachchair(int number,String type, LatLng location) {
+    public Beachchair(int number,String type, LatLng location, boolean free) {
         this.number=number;
         this.type=type;
         this.location=location;
+        this.free = free;
     }
 
     public int getNumber() {
@@ -36,5 +38,13 @@ public class Beachchair {
 
     public void setLocation(LatLng location) {
         this.location = location;
+    }
+
+    public boolean isFree() {
+        return free;
+    }
+
+    public void setFree(boolean free) {
+        this.free = free;
     }
 }

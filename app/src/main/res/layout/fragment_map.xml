@@ -37,7 +37,7 @@
             android:text="@{String.valueOf(viewmodel.selectedNumber)}"
             android:onClick="@{()->viewmodel.changeNumber()}"
 
-            app:layout_constraintBottom_toBottomOf="@id/korb_map"
+            app:layout_constraintTop_toBottomOf="@id/korb_map"
             app:layout_constraintLeft_toLeftOf="parent"
 
             app:layout_constraintHeight_default="percent"

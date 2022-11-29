@@ -15,14 +15,14 @@ public class MapFragmentViewModel extends androidx.lifecycle.ViewModel implement
 
     public MutableLiveData<List<Beachchair>> beachchairs = new MutableLiveData<>();
     private MutableLiveData<Integer> selectedNumber = new MutableLiveData<>();
+    private List<Beachchair> list = new ArrayList<>();
+    Beachchair beachchair1 = new Beachchair(1, "Normal", new LatLng(14,14), true);
+    Beachchair beachchair2 = new Beachchair(2, "XL", new LatLng(14.1,14.1), true);
+    Beachchair beachchair3 = new Beachchair(3, "XXL", new LatLng(14.2, 14.2), true);
 
 
     public MapFragmentViewModel() {
         //Init some demo data
-        List<Beachchair> list = new ArrayList<>();
-        Beachchair beachchair1 = new Beachchair(1, "Normal", new LatLng(14,14));
-        Beachchair beachchair2 = new Beachchair(2, "XL", new LatLng(14.1,14.1));
-        Beachchair beachchair3 = new Beachchair(3, "XXL", new LatLng(14.2, 14.2));
         list.add(beachchair1);
         list.add(beachchair2);
         list.add(beachchair3);
@@ -39,7 +39,7 @@ public class MapFragmentViewModel extends androidx.lifecycle.ViewModel implement
     }
 
     public void changeNumber() {
-        selectedNumber.setValue(selectedNumber.getValue()+1);
+        beachchair1.setNumber(77);
     }
 
     @Override
