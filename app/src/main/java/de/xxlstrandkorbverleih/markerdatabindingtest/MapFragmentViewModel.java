@@ -92,37 +92,6 @@ public class MapFragmentViewModel extends androidx.lifecycle.ViewModel implement
         }
         double medLat = (greatestLat-smallestLat)+smallestLat;
         double medLon = (greatestLon-smallestLon)+smallestLon;
-        //////////////////////////////////////////////////////////////////////////////////////////
-        LatLng ne = new LatLng(smallestLat,greatestLon);
-        LatLng sw = new LatLng(greatestLat,smallestLon);
-
-        double latFraction = (latRad(ne.latitude) - latRad(sw.latitude)) / Math.PI;
-
-        double lngDiff = ne.longitude - sw.longitude;
-        double lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
-
-
-        double latZoom = zoom(1080, WORLD_PX_HEIGHT, latFraction);
-        double lngZoom = zoom(2560, WORLD_PX_WIDTH, lngFraction);
-
-        int result = Math.min((int)latZoom, (int)lngZoom);
-        zoomlevel.setValue(result);
-        //////////////////////////////////////////////////////////////////////////////////////////////
-
         return new LatLng(medLat,medLon);
-    }
-
-    private static final double LN2 = 0.6931471805599453;
-    private static final int WORLD_PX_HEIGHT = 256;
-    private static final int WORLD_PX_WIDTH = 256;
-    private static final int ZOOM_MAX = 21;
-
-     private double latRad(double lat) {
-        double sin = Math.sin(lat * Math.PI / 180);
-        double radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
-        return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
-    }
-    private double zoom(int mapPx, int worldPx, double fraction) {
-        return Math.floor(Math.log(mapPx / worldPx / fraction) / LN2);
     }
 }

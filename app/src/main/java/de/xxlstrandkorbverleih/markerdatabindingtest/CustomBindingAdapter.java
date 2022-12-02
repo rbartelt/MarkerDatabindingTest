@@ -30,6 +30,7 @@ public class CustomBindingAdapter {
                     googleMap.setOnMarkerClickListener(viewModel);
                     LatLngBounds.Builder builder = new LatLngBounds.Builder();
                     for (Beachchair beachchair : beachchairs) {
+                        builder.include(beachchair.getLocation());
                         ////////////////////////////////////////////////////////////////////////////
                         //create Marker Bitmap
                         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
@@ -64,17 +65,21 @@ public class CustomBindingAdapter {
                         googleMap.addMarker(markerOptions);
                     }
                     ////////////////////////////////////////////////////////////////////////////
+                    //set Camera with BoundsBuilder to get the zoom Factor
+                    LatLngBounds bounds = builder.build();
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 0);
+                    googleMap.moveCamera(cameraUpdate);
+                    float zoom = googleMap.getCameraPosition().zoom;
+                    ////////////////////////////////////////////////////////////////////////////
                     //set Camera
                     CameraPosition cameraPosition=new CameraPosition.Builder()
                             .target(viewModel.viewCentre.getValue()) // Sets the center of the map
                             .tilt(0) // Sets the tilt of the camera to 0 degrees (topview)
-                            .zoom(viewModel.zoomlevel.getValue()) // Sets the zoom
+                            .zoom(zoom) // Sets the zoom
                             .bearing(45) // Sets the orientation of the camera to northeast
                             .build();
-                    CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+                    cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
                     googleMap.moveCamera(cameraUpdate);
-                    ////////////////////////////////////////////////////////////////////////////
-
                 }
             });
         }
