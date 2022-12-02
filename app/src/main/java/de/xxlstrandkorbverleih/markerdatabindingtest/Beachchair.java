@@ -7,13 +7,13 @@ public class Beachchair {
     private int number;
     private String type;
     private LatLng location;
-    private boolean free;
+    private boolean selected;
 
-    public Beachchair(int number,String type, LatLng location, boolean free) {
+    public Beachchair(int number,String type, LatLng location, boolean selected) {
         this.number=number;
         this.type=type;
         this.location=location;
-        this.free = free;
+        this.selected = selected;
     }
 
     public int getNumber() {
@@ -40,11 +40,11 @@ public class Beachchair {
         this.location = location;
     }
 
-    public boolean isFree() {
-        return free;
+    public boolean isSelected() {
+        return selected;
     }
 
-    public void setFree(boolean free) {
-        this.free = free;
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }

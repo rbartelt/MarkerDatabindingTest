@@ -32,13 +32,28 @@
 
         <TextView
             android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{String.valueOf(viewmodel.selectedNumber)}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text=""
             android:onClick="@{()->viewmodel.changeNumber()}"
 
             app:layout_constraintTop_toBottomOf="@id/korb_map"
             app:layout_constraintLeft_toLeftOf="parent"
+
+            app:layout_constraintHeight_default="percent"
+            app:layout_constraintHeight_percent="0.1"
+
+            app:layout_constraintWidth_default="percent"
+            app:layout_constraintWidth_percent="0.5" />
+
+        <Button
+            android:id="@+id/buttonAddBeachchair"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="Add Beachchair"
+            android:onClick="@{()->viewmodel.addBeachchair()}"
+            app:layout_constraintTop_toBottomOf="@id/korb_map"
+            app:layout_constraintLeft_toRightOf="@id/textView"
 
             app:layout_constraintHeight_default="percent"
             app:layout_constraintHeight_percent="0.1"

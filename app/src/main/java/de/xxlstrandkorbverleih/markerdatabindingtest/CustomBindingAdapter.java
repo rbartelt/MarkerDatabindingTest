@@ -1,8 +1,19 @@
 package de.xxlstrandkorbverleih.markerdatabindingtest;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
+
 import androidx.databinding.BindingAdapter;
+
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
@@ -17,13 +28,55 @@ public class CustomBindingAdapter {
                 if (beachchairs != null) {
                     mapView.onResume();
                     googleMap.setOnMarkerClickListener(viewModel);
+                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
                     for (Beachchair beachchair : beachchairs) {
-                        if (beachchair.isFree())
-                            googleMap.addMarker(new MarkerOptions().position(beachchair.getLocation()).title(String.valueOf(beachchair.getNumber())));
+                        ////////////////////////////////////////////////////////////////////////////
+                        //create Marker Bitmap
+                        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+                        Bitmap bitmap = Bitmap.createBitmap(80,80,conf);
+                        Canvas canvas1 = new Canvas(bitmap);
+                        Paint textColor = new Paint();
+                        Paint circleColor = new Paint();
+                        circleColor.setColor(Color.WHITE);
+                        textColor.setTextSize(45);
+                        switch (beachchair.getType()) {
+                            case "Normal":
+                                textColor.setColor(Color.RED);
+                                break;
+                            case "XL":
+                                textColor.setColor(Color.BLUE);
+                                break;
+                            case "XXL":
+                                textColor.setColor(Color.GREEN);
+                                break;
+                        }
+                        if (beachchair.isSelected())
+                            canvas1.drawCircle(40,40,40, circleColor);
+                        canvas1.drawText(String.valueOf(beachchair.getNumber()), 30,50,textColor);
+
+                        ////////////////////////////////////////////////////////////////////////////
+                        //configure Marker
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                        markerOptions.position(beachchair.getLocation());
+                        markerOptions.title(String.valueOf(beachchair.getNumber()));
+                        markerOptions.flat(false);
+                        googleMap.addMarker(markerOptions);
                     }
+                    ////////////////////////////////////////////////////////////////////////////
+                    //set Camera
+                    CameraPosition cameraPosition=new CameraPosition.Builder()
+                            .target(viewModel.viewCentre.getValue()) // Sets the center of the map
+                            .tilt(0) // Sets the tilt of the camera to 0 degrees (topview)
+                            .zoom(viewModel.zoomlevel.getValue()) // Sets the zoom
+                            .bearing(45) // Sets the orientation of the camera to northeast
+                            .build();
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+                    googleMap.moveCamera(cameraUpdate);
+                    ////////////////////////////////////////////////////////////////////////////
+
                 }
             });
         }
     }
-
 }
