@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.databinding.BindingAdapter;
 
@@ -29,12 +30,14 @@ public class CustomBindingAdapter {
                     mapView.onResume();
                     googleMap.setOnMarkerClickListener(viewModel);
                     LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                    LatLngBounds.Builder selectedBuilder = new LatLngBounds.Builder();
+                    int i = 0;
                     for (Beachchair beachchair : beachchairs) {
                         builder.include(beachchair.getLocation());
                         ////////////////////////////////////////////////////////////////////////////
                         //create Marker Bitmap
                         Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-                        Bitmap bitmap = Bitmap.createBitmap(80,80,conf);
+                        Bitmap bitmap = Bitmap.createBitmap(80, 80, conf);
                         Canvas canvas1 = new Canvas(bitmap);
                         Paint textColor = new Paint();
                         Paint circleColor = new Paint();
@@ -51,9 +54,12 @@ public class CustomBindingAdapter {
                                 textColor.setColor(Color.GREEN);
                                 break;
                         }
-                        if (beachchair.isSelected())
-                            canvas1.drawCircle(40,40,40, circleColor);
-                        canvas1.drawText(String.valueOf(beachchair.getNumber()), 30,50,textColor);
+                        if (beachchair.isSelected()) {
+                            i++;
+                            selectedBuilder.include(beachchair.getLocation());
+                            canvas1.drawCircle(40, 40, 40, circleColor);
+                        }
+                        canvas1.drawText(String.valueOf(beachchair.getNumber()), 30, 50, textColor);
 
                         ////////////////////////////////////////////////////////////////////////////
                         //configure Marker
@@ -64,16 +70,23 @@ public class CustomBindingAdapter {
                         markerOptions.flat(false);
                         googleMap.addMarker(markerOptions);
                     }
+
                     ////////////////////////////////////////////////////////////////////////////
                     //set Camera with BoundsBuilder to get the zoom Factor
-                    LatLngBounds bounds = builder.build();
+                    LatLngBounds bounds;
+                    if (i==0) {
+                        bounds = builder.build();
+                    }
+                    else {
+                        bounds = selectedBuilder.build();
+                    }
                     CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 0);
                     googleMap.moveCamera(cameraUpdate);
                     float zoom = googleMap.getCameraPosition().zoom;
                     ////////////////////////////////////////////////////////////////////////////
                     //set Camera
-                    CameraPosition cameraPosition=new CameraPosition.Builder()
-                            .target(viewModel.viewCentre.getValue()) // Sets the center of the map
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(bounds.getCenter()) // Sets the center of the map
                             .tilt(0) // Sets the tilt of the camera to 0 degrees (topview)
                             .zoom(zoom) // Sets the zoom
                             .bearing(45) // Sets the orientation of the camera to northeast
@@ -81,6 +94,7 @@ public class CustomBindingAdapter {
                     cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
                     googleMap.moveCamera(cameraUpdate);
                 }
+
             });
         }
     }
